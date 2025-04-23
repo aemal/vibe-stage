@@ -35,7 +35,7 @@
 - **Backend:** [Firebase](https://firebase.google.com/) (Auth, Firestore, Functions)
 - **Live Calls:** [Agora](https://www.agora.io/) SDK for real-time voice/video
 - **Realtime:** Firebase listeners + WebRTC
-- **Deployment:** [Vercel](https://vercel.com/) or Firebase Hosting
+- **Deployment:** [Vercel](https://vercel.com/) or Firebase App Hosting
 - **Vibe Coding:** To make sure we build it within 10 hours and use it in the workshop on 3rd May.
 ---
 
