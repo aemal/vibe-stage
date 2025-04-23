@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history to ensure lock files
       
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
@@ -35,7 +37,13 @@ jobs:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       
       - name: Export Next.js app
-        run: bun run export || bunx next export
+        run: |
+          if [ -f "package.json" ] && grep -q "export" "package.json"; then
+            bun run export
+          else
+            echo "No export script found, using next export directly"
+            bunx next export
+          fi
         
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
