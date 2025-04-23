@@ -9,27 +9,21 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
       
-      - name: Verify lock file exists
-        run: |
-          if [ ! -f "bun.lock" ]; then
-            echo "Lock file missing, creating new one..."
-            rm -f bun.lock || true
-            bun install --no-save
-          else
-            echo "Lock file exists"
-            ls -la bun.lock
-          fi
-          
       - name: Install dependencies
-        run: bun install
-        
+        run: |
+          echo "Current directory contents:"
+          ls -la
+          echo "Installing dependencies..."
+          bun install --frozen-lockfile=false
+      
       - name: Build Next.js app
         run: bun run build
         env:
@@ -47,18 +41,26 @@ jobs:
       
       - name: Export Next.js app
         run: |
-          if [ -f "package.json" ] && grep -q "export" "package.json"; then
+          if grep -q "export" package.json; then
             bun run export
           else
             echo "No export script found, using next export directly"
             bunx next export
           fi
       
-      # Use the official Firebase CLI directly instead of the GitHub Action
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
       
+      - name: Debug Firebase configuration
+        run: |
+          echo "Firebase configuration:"
+          ls -la firebase.json
+          cat firebase.json
+          
+          echo "Checking output directory:"
+          ls -la out || echo "Output directory does not exist"
+      
       - name: Deploy to Firebase Hosting
-        run: firebase deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}" --project "${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}" --non-interactive
+        run: firebase deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}" --non-interactive
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }} 
