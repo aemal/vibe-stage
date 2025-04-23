@@ -1,93 +1,86 @@
-# 🎤 VibeStage – Bring Remote Energy to the Room
+# VibeStage - Question Submission and Upvoting System
 
-**VibeStage** is an open-source real-time communication wall for hybrid workshops and conferences. It brings online participants to the physical venue with text, voice, and video messages projected live on a big screen — blending digital presence with real-world vibes.
+A realtime question submission and upvoting system for conferences and workshops, built with Next.js and Firebase.
 
----
+## Features
 
-## 🚀 Features
+- Question submission with title and description
+- Realtime question updates
+- Upvoting system
+- Moderator controls to mark questions as answered
+- Sorting by newest or most popular
+- User-specific views
 
-- 💬 **Live Text Comments**  
-  Real-time messages from remote participants appear instantly on a big screen with country tags, emojis, and smooth CSS animations.
+## Firebase Setup
 
-- 🌍 **Location Awareness**  
-  Each message shows the country of origin, fostering global connection.
+1. Create a Firebase project at [https://console.firebase.google.com/](https://console.firebase.google.com/)
+2. Enable Authentication with Email/Password and/or Google providers
+3. Create a Firestore database
+4. Enable Firebase Hosting
+5. Add the Firebase configuration to your environment variables (see below)
 
-- 🔊 **Voice Messages**  
-  Remote participants can leave short voice recordings for moderators to play aloud in the room.
+## Development Setup
 
-- 🎥 **Video Questions**  
-  Moderators can review and project asynchronous video clips from online attendees.
-
-- 📞 **Live Remote Call-Ins**  
-  With one click, bring someone from online "on stage" to speak live via WebRTC (powered by Agora).
-
-- 🧑‍💼 **Moderator Dashboard**  
-  Manage messages, queue voice/video, and approve live speaker requests.
-
-- 🖥️ **Big Screen Mode**  
-  Beautifully animated fullscreen projection of messages, perfect for workshop venues.
-
----
-
-## 🛠 Tech Stack
-
-- **Frontend:** [Next.js 15](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), [Hero UI](https://www.heroui.com/) (optional)
-- **Backend:** [Firebase](https://firebase.google.com/) (Auth, Firestore, Functions)
-- **Live Calls:** [Agora](https://www.agora.io/) SDK for real-time voice/video
-- **Realtime:** Firebase listeners + WebRTC
-- **Deployment:** [Vercel](https://vercel.com/) or Firebase App Hosting
-- **Vibe Coding:** To make sure we build it within 10 hours and use it in the workshop on 3rd May.
----
-
-## 🧑‍💻 Getting Started
+1. Clone the repository
+2. Install dependencies:
 
 ```bash
-git clone https://github.com/aemal/vibestage.git
-cd vibestage
 bun install
+```
+
+3. Create a `.env.local` file with your Firebase configuration:
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
+```
+
+4. Run the development server:
+
+```bash
 bun run dev
 ```
 
-⚠️ Set up your Firebase and Agora credentials. Rename .env.example to .env.local and fill in your keys.
+## Deployment
 
-## 📂 Project Structure
+1. Install Firebase CLI: `bun add -g firebase-tools`
+2. Login to Firebase: `firebase login`
+3. Initialize Firebase: `firebase init`
+4. Build your Next.js app: `bun run build`
+5. Export the static site: `bun run export` (or use `bunx next export`)
+6. Deploy to Firebase: `firebase deploy`
+
+Alternatively, set up the GitHub Actions workflow for automatic deployment on push to the main branch.
+
+## Firebase App Hosting
+
+This project includes a configuration for Firebase App Hosting. The `apphosting.yaml` file contains the necessary configuration for deploying to Firebase with environment variables and secrets.
+
+## Project Structure
 
 ```
-/components
-  /BigScreenView      → Projected live view
-  /ModeratorDashboard → Admin interface
-  /RemoteClient       → Remote user view
-
-/pages
-  /submit             → Public message submission UI
-  /moderator          → Admin/mod view
-  /screen             → Big screen real-time display
-
-/lib
-  firebase.ts         → Firebase config & utilities
-  agora.ts            → Agora call handlers
-
-/public
-  /media              → Static assets
+├── .github/workflows    # GitHub Actions workflows
+│   └── firebase-deploy.yml  # Automatic deployment to Firebase
+├── app/                 # Next.js application code
+├── lib/                 # Shared utilities and services
+│   ├── firebase.js      # Firebase initialization
+│   ├── models.ts        # TypeScript interfaces
+│   └── questionService.ts # Firebase operations for questions
+├── public/              # Static assets
+├── .firebaserc          # Firebase project configuration
+├── apphosting.yaml      # Firebase App Hosting configuration
+├── firebase.config.js   # Firebase client configuration
+├── firebase.json        # Firebase hosting configuration
+├── firestore.indexes.json # Firestore index configuration
+├── firestore.rules      # Firestore security rules
+└── storage.rules        # Firebase Storage security rules
 ```
 
-## 🧠 Use Cases
+## License
 
-- Hybrid workshops
-- Global webinars
-- Live panels and Q&A
-- Community town halls
-- Online/offline hackathons
-
-## ❤️ Vision
-
-VibeStage exists to amplify online voices at real-world events.
-It's not just a comment wall — it's a live stage for everyone, everywhere.
-
-We believe that hybrid gatherings shouldn't feel like two disconnected rooms. With VibeStage, remote participants are front and center — heard, seen, and celebrated.
-
-## 📄 License
-
-MIT License — Fork it. Remix it. Launch your vibe.
-
-Built with love by the community 🌐✨ 
+MIT 
