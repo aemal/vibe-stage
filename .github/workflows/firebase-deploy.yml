@@ -10,13 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Fetch all history to ensure lock files
       
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
+      
+      - name: Verify lock file exists
+        run: |
+          if [ ! -f "bun.lock" ]; then
+            echo "Lock file missing, creating new one..."
+            rm -f bun.lock || true
+            bun install --no-save
+          else
+            echo "Lock file exists"
+            ls -la bun.lock
+          fi
           
       - name: Install dependencies
         run: bun install
@@ -44,11 +53,12 @@ jobs:
             echo "No export script found, using next export directly"
             bunx next export
           fi
-        
-      - name: Deploy to Firebase
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          channelId: live
-          projectId: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }} 
+      
+      # Use the official Firebase CLI directly instead of the GitHub Action
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+      
+      - name: Deploy to Firebase Hosting
+        run: firebase deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}" --project "${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}" --non-interactive
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }} 
