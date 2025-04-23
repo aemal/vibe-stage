@@ -4,8 +4,14 @@ runConfig:
   minInstances: 0
   maxInstances: 10
   concurrency: 80
+  port: 8080
 
 env:
+  - variable: PORT
+    value: "8080"
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
     value: AIzaSyDb4WbuJS6Je8FAr3tpFVhFY_lSiuLhcD0
     availability:
