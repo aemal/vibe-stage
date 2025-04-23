@@ -1,66 +1,30 @@
-name: Firebase Deploy
+name: Deploy to Firebase App Hosting
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
-      
+          node-version: '18'
+
       - name: Install dependencies
-        run: |
-          echo "Current directory contents:"
-          ls -la
-          echo "Installing dependencies..."
-          bun install --frozen-lockfile=false
-      
+        run: npm ci
+
       - name: Build Next.js app
-        run: bun run build
+        run: npm run build
+
+      - name: Deploy to Firebase App Hosting
+        run: firebase deploy --only apphosting
         env:
-          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
-          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
-          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
-          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
-          NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_ASSISTANT_ID: ${{ secrets.OPENAI_ASSISTANT_ID }}
-          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-      
-      - name: Export Next.js app
-        run: |
-          if grep -q "export" package.json; then
-            bun run export
-          else
-            echo "No export script found, using next export directly"
-            bunx next export
-          fi
-      
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-      
-      - name: Debug Firebase configuration
-        run: |
-          echo "Firebase configuration:"
-          ls -la firebase.json
-          cat firebase.json
-          
-          echo "Checking output directory:"
-          ls -la out || echo "Output directory does not exist"
-      
-      - name: Deploy to Firebase Hosting
-        run: firebase deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}" --non-interactive
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }} 
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
