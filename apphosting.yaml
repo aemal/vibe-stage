@@ -17,11 +17,11 @@ env:
       - BUILD
       - RUNTIME
   # Add additional environment variables as needed
-:contentReference[oaicite:1]{index=1}
+
 scripts:
   buildCommand: npm run build
   runCommand: npm run start
-:contentReference[oaicite:2]{index=2}
+
 outputFiles:
   serverApp:
     include: [".next", "public"]
