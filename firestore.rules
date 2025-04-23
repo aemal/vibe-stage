@@ -1,0 +1,34 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Questions collection
+    match /questions/{questionId} {
+      // Anyone can read questions
+      allow read: if true;
+      
+      // Anyone can create questions
+      allow create: if true;
+      
+      // Anyone can update a question
+      allow update: if true;
+      
+      // Anyone can delete a question
+      allow delete: if true;
+    }
+    
+    // Upvotes collection
+    match /questions/{questionId}/upvotes/{userId} {
+      // Anyone can read upvotes
+      allow read: if true;
+      
+      // Anyone can create/update/delete upvotes
+      allow create, update, delete: if true;
+    }
+    
+    // Users collection (if needed)
+    match /users/{userId} {
+      // Anyone can read and write user data
+      allow read, write: if true;
+    }
+  }
+} 
