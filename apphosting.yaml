@@ -13,12 +13,12 @@ env:
       - BUILD
       - RUNTIME
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: AIzaSyDb4WbuJS6Je8FAr3tpFVhFY_lSiuLhcD0
+    value: YOUR_FIREBASE_API_KEY
     availability:
       - BUILD
       - RUNTIME
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-    value: vibe-stage.firebaseapp.com
+    value: YOUR_FIREBASE_AUTH_DOMAIN
     availability:
       - BUILD
       - RUNTIME
@@ -30,4 +30,7 @@ scripts:
 
 outputFiles:
   serverApp:
-    include: [".next", "public"]
+    include:
+      - .next/standalone
+      - .next/static
+      - public
