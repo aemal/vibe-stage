@@ -25,8 +25,8 @@ env:
   # Add additional environment variables as needed
 
 scripts:
-  buildCommand: npm run build
-  runCommand: npm run start
+  buildCommand: bun run build
+  runCommand: bun run start
 
 outputFiles:
   serverApp:
