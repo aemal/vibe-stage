@@ -25,8 +25,11 @@ env:
   # Add additional environment variables as needed
 
 scripts:
-  buildCommand: bun run build
-  runCommand: bun run start
+  buildCommand: npm run build
+  runCommand: npm run start
+  # For local or GitHub Actions use Bun
+  # buildCommand: bun run build
+  # runCommand: bun run start
 
 outputFiles:
   serverApp:
